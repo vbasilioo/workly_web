@@ -141,10 +141,10 @@ export function UsersTable() {
               Add a new user to the system. Only administrators can do this.
             </DialogDescription>
           </DialogHeader>
-          <UserForm
+          {/* <UserForm
             onSubmit={handleCreateUser}
             isLoading={isCreatingUser}
-          />
+          /> */}
         </DialogContent>
       </Dialog>
 
@@ -156,11 +156,11 @@ export function UsersTable() {
               Update the user's information.
             </DialogDescription>
           </DialogHeader>
-          <UserForm
+          {/* <UserForm
             user={selectedUser}
             onSubmit={handleUpdateUser}
             isLoading={isUpdatingUser}
-          />
+          /> */}
         </DialogContent>
       </Dialog>
 
