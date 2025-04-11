@@ -8,8 +8,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Logo } from '@/components/atoms/brand/Logo'
+import { signIn } from "next-auth/react";
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
 
 export function LoginForm() {
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
@@ -19,13 +24,30 @@ export function LoginForm() {
   })
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      // TODO: Implementar autenticação
-      console.log(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
+    const result = await toast.promise(
+      async () => {
+        const response = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false
+        });
+
+        if (!response?.ok) {
+          throw new Error("Login failed");
+        }
+
+        return response;
+      },
+      {
+        loading: "Entrando...",
+        success: () => {
+          router.push("/dashboard")
+          return "Login realizado com sucesso!";
+        },
+        error: "Credenciais inválidas. Verifique seu e-mail e senha.",
+      }
+    );
+  };
 
   return (
     <Card className="w-full max-w-md">

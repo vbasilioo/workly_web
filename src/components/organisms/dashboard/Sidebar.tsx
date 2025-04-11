@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Logo } from '@/components/atoms/brand/Logo'
 import { Menu, LayoutDashboard, Users, LogOut } from 'lucide-react'
+import { signOut } from 'next-auth/react'
 
 const menuItems = [
   {
@@ -34,9 +35,12 @@ export function Sidebar() {
 
   const isActive = (path: string) => pathname === path
 
+  async function handleSignOut() {
+    await signOut({ callbackUrl: '/' });
+  }
+
   return (
     <>
-      {/* Mobile Sidebar */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild className="lg:hidden">
           <Button variant="ghost" size="icon" className="lg:hidden">
@@ -55,11 +59,10 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium ${
-                    isActive(item.href)
-                      ? 'bg-secondary text-secondary-foreground'
-                      : 'hover:bg-secondary/50'
-                  }`}
+                  className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium ${isActive(item.href)
+                    ? 'bg-secondary text-secondary-foreground'
+                    : 'hover:bg-secondary/50'
+                    }`}
                 >
                   <item.icon className="h-5 w-5" />
                   <span>{item.title}</span>
@@ -67,7 +70,7 @@ export function Sidebar() {
               ))}
             </nav>
             <div className="p-4">
-              <Button variant="ghost" className="w-full justify-start space-x-3">
+              <Button variant="ghost" className="w-full justify-start space-x-3" onClick={handleSignOut}>
                 <LogOut className="h-5 w-5" />
                 <span>Logout</span>
               </Button>
@@ -76,7 +79,6 @@ export function Sidebar() {
         </SheetContent>
       </Sheet>
 
-      {/* Desktop Sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         <div className="flex h-full flex-col">
           <div className="p-4">
@@ -88,11 +90,10 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium ${
-                  isActive(item.href)
-                    ? 'bg-secondary text-secondary-foreground'
-                    : 'hover:bg-secondary/50'
-                }`}
+                className={`flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium ${isActive(item.href)
+                  ? 'bg-secondary text-secondary-foreground'
+                  : 'hover:bg-secondary/50'
+                  }`}
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.title}</span>
@@ -100,7 +101,7 @@ export function Sidebar() {
             ))}
           </nav>
           <div className="p-4">
-            <Button variant="ghost" className="w-full justify-start space-x-3">
+            <Button variant="ghost" className="w-full justify-start space-x-3" onClick={handleSignOut}>
               <LogOut className="h-5 w-5" />
               <span>Logout</span>
             </Button>
