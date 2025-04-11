@@ -20,8 +20,10 @@ export interface Employee {
 }
 
 export interface LoginResponse {
-  access_token: string;
-  user: User;
+  data: {
+    access_token: string;
+    user: User
+  }
 }
 
 export interface LoginRequest {
