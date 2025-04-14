@@ -2,41 +2,40 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useEmployees } from '@/lib/hooks/useEmployees'
-import { useUsers } from '@/lib/hooks/useUsers'
 import { Users, UserCheck, UserMinus, DollarSign } from 'lucide-react'
-import { useSession } from 'next-auth/react'
 
 export default function DashboardPage() {
 
-  const { users } = useUsers()
-  const { data: session } = useSession()
+  const { employees } = useEmployees()
 
-  const stats = [
-    {
-      title: 'Total de Funcionários',
-      value: users ? users.data.length : '0',
-      icon: Users,
-      description: '+5 no último mês'
-    },
-    {
-      title: 'Funcionários Ativos',
-      value: '98',
-      icon: UserCheck,
-      description: '82% do total'
-    },
-    {
-      title: 'Funcionários Inativos',
-      value: '22',
-      icon: UserMinus,
-      description: '18% do total'
-    },
-    {
-      title: 'Custo Mensal',
-      value: 'R$ 450.000',
-      icon: DollarSign,
-      description: '+2% que mês passado'
-    }
-  ]
+  const stats = employees
+    ? [
+      {
+        title: 'Total de Funcionários',
+        value: employees.length,
+        icon: Users,
+        description: '+5 no último mês',
+      },
+      {
+        title: 'Funcionários Ativos',
+        value: employees.filter((e) => e.isActive).length,
+        icon: UserCheck,
+        description: '82% do total',
+      },
+      {
+        title: 'Funcionários Inativos',
+        value: employees.filter((e) => !e.isActive).length,
+        icon: UserMinus,
+        description: '18% do total',
+      },
+      {
+        title: 'Custo Mensal',
+        value: 'R$ 450.000',
+        icon: DollarSign,
+        description: '+2% que mês passado',
+      },
+    ]
+    : [];
 
   return (
     <div className="space-y-8">

@@ -7,51 +7,25 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Plus } from 'lucide-react'
 import { EmployeesTable } from '@/components/organisms/dashboard/EmployeesTable'
 import { EmployeeForm } from '@/components/molecules/employees/EmployeeForm'
-
-// Dados mockados com tipagem correta
-const activeEmployees = [
-  {
-    id: '1',
-    name: 'João Silva',
-    email: 'joao@workly.com',
-    role: 'Desenvolvedor',
-    department: 'Tecnologia',
-    startDate: '2023-01-15',
-    status: 'active' as const
-  },
-  {
-    id: '2',
-    name: 'Maria Santos',
-    email: 'maria@workly.com',
-    role: 'Designer',
-    department: 'Design',
-    startDate: '2023-02-20',
-    status: 'active' as const
-  }
-]
-
-const inactiveEmployees = [
-  {
-    id: '3',
-    name: 'Pedro Souza',
-    email: 'pedro@workly.com',
-    role: 'Gerente',
-    department: 'Administração',
-    startDate: '2022-06-10',
-    endDate: '2023-12-31',
-    status: 'inactive' as const
-  }
-]
+import { useEmployees } from '@/lib/hooks/useEmployees'
 
 export default function EmployeesPage() {
   const [activeTab, setActiveTab] = useState('active')
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const { employees, createEmployee } = useEmployees()
 
   const handleCreateEmployee = async (data: any) => {
-    // TODO: Implementar integração com backend
-    console.log('Creating employee:', data)
-    setIsCreateDialogOpen(false)
+    try {
+      await createEmployee(data)
+      setIsCreateDialogOpen(false)
+    }
+    catch (error) {
+      console.error('Error creating employee:', error)
+    }
   }
+
+  const activeEmployees = employees?.filter((employee) => employee.isActive === true)
+  const inactiveEmployees = employees?.filter((employee) => employee.isActive === false)
 
   return (
     <div className="space-y-8">
@@ -62,7 +36,7 @@ export default function EmployeesPage() {
             Gerencie seus funcionários ativos e inativos
           </p>
         </div>
-        <Button 
+        <Button
           className="w-full md:w-auto bg-primary hover:bg-primary/90"
           onClick={() => setIsCreateDialogOpen(true)}
         >
@@ -74,23 +48,26 @@ export default function EmployeesPage() {
       <Tabs defaultValue="active" onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="bg-muted">
           <TabsTrigger value="active" className="data-[state=active]:bg-background">
-            Ativos ({activeEmployees.length})
+            Ativos ({activeEmployees?.length})
           </TabsTrigger>
           <TabsTrigger value="inactive" className="data-[state=active]:bg-background">
-            Inativos ({inactiveEmployees.length})
+            Inativos ({inactiveEmployees?.length})
           </TabsTrigger>
         </TabsList>
         <TabsContent value="active">
-          <EmployeesTable employees={activeEmployees} />
+          {activeEmployees && (
+            <EmployeesTable employees={activeEmployees} />
+          )}
         </TabsContent>
         <TabsContent value="inactive">
-          <EmployeesTable employees={inactiveEmployees} />
+          {inactiveEmployees && (
+            <EmployeesTable employees={inactiveEmployees} />
+          )}
         </TabsContent>
       </Tabs>
 
-      {/* Modal de Criação */}
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Novo Funcionário</DialogTitle>
             <DialogDescription>

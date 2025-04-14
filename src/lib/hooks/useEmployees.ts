@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 export function useEmployees() {
   const queryClient = useQueryClient();
 
-  const { data: employees, isLoading: isLoadingEmployees } = useQuery<Employee[]>({
+  const { data: employees, isLoading: isLoadingEmployees, refetch } = useQuery<Employee[]>({
     queryKey: ['employees'],
     queryFn: () => employeesService.list(),
   });
@@ -45,6 +45,17 @@ export function useEmployees() {
     },
   });
 
+  const { mutateAsync: restoreEmployee, isPending: isRestoringEmployee } = useMutation({
+    mutationFn: (id: string) => employeesService.restore(id),
+    onSuccess: () => {
+      refetch();
+      toast.success('Employee restored successfully');
+    },
+    onError: () => {
+      toast.error('Error restoring employee');
+    },
+  })
+
   return {
     employees,
     isLoadingEmployees,
@@ -54,5 +65,7 @@ export function useEmployees() {
     isUpdatingEmployee,
     deleteEmployee,
     isDeletingEmployee,
+    restoreEmployee,
+    isRestoringEmployee,
   };
 } 

@@ -31,17 +31,9 @@ import {
 } from '@/components/ui/alert'
 import { MoreHorizontal, Pencil, Trash2, RotateCcw, AlertTriangle } from 'lucide-react'
 import { EmployeeForm } from '@/components/molecules/employees/EmployeeForm'
+import { Employee } from '@/lib/types'
+import { useEmployees } from '@/lib/hooks/useEmployees'
 
-interface Employee {
-  id: string
-  name: string
-  email: string
-  role: string
-  department: string
-  startDate: string
-  endDate?: string
-  status: 'active' | 'inactive'
-}
 
 interface EmployeesTableProps {
   employees: Employee[]
@@ -52,6 +44,9 @@ type DialogType = 'edit' | 'deactivate' | 'reactivate' | null
 export function EmployeesTable({ employees }: EmployeesTableProps) {
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null)
   const [dialogType, setDialogType] = useState<DialogType>(null)
+
+  const { deleteEmployee, restoreEmployee, updateEmployee } = useEmployees()
+  const EmployeedId = selectedEmployee?.id as string
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('pt-BR')
@@ -76,20 +71,31 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
   }
 
   const handleSubmit = async (data: any) => {
-    // TODO: Implementar integração com backend
-    console.log('Form submitted:', data)
+    try {
+      await updateEmployee({ id: EmployeedId, data: data })
+      handleCloseDialog()
+    } catch (error) {
+      console.error('Error updating employee:', error)
+    }
     handleCloseDialog()
   }
 
   const handleConfirmDeactivate = async () => {
-    // TODO: Implementar integração com backend
-    console.log('Deactivating employee:', selectedEmployee?.id)
+    try {
+      await deleteEmployee(EmployeedId)
+    }
+    catch (error) {
+      console.error('Error deactivating employee:', error)
+    }
     handleCloseDialog()
   }
 
   const handleConfirmReactivate = async () => {
-    // TODO: Implementar integração com backend
-    console.log('Reactivating employee:', selectedEmployee?.id)
+    try {
+      await restoreEmployee(EmployeedId)
+    } catch (error) {
+      console.error('Error reactivating employee:', error)
+    }
     handleCloseDialog()
   }
 
@@ -101,9 +107,10 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
             <TableRow className="hover:bg-muted/50">
               <TableHead>Funcionário</TableHead>
               <TableHead>Cargo</TableHead>
+              <TableHead>RG</TableHead>
               <TableHead className="hidden md:table-cell">Departamento</TableHead>
               <TableHead className="hidden md:table-cell">Data de Início</TableHead>
-              {employees[0]?.status === 'inactive' && (
+              {employees[0]?.isActive === false && (
                 <TableHead className="hidden md:table-cell">Data de Saída</TableHead>
               )}
               <TableHead className="w-[70px]"></TableHead>
@@ -122,7 +129,7 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
                     <div className="flex flex-col">
                       <span className="font-medium">{employee.name}</span>
                       <span className="text-sm text-muted-foreground md:hidden">
-                        {employee.role}
+                        {employee.department}
                       </span>
                       <span className="text-sm text-muted-foreground">
                         {employee.email}
@@ -130,16 +137,18 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className="hidden md:table-cell">{employee.role}</TableCell>
+                <TableCell className="hidden md:table-cell">{employee.position}</TableCell>
+                <TableCell className="hidden md:table-cell hover:text-blue-600 cursor-pointer">{employee.rg}</TableCell>
                 <TableCell className="hidden md:table-cell">
                   {employee.department}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {formatDate(employee.startDate)}
+                  {/* {formatDate(employee.salary)} */}
+                  {formatDate(employee.hireDate)}
                 </TableCell>
-                {employee.status === 'inactive' && (
+                {employee.isActive === false && (
                   <TableCell className="hidden md:table-cell">
-                    {employee.endDate && formatDate(employee.endDate)}
+                    {employee.createdAt && formatDate(employee.createdAt)}
                   </TableCell>
                 )}
                 <TableCell>
@@ -154,9 +163,9 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
                         <Pencil className="mr-2 h-4 w-4 text-muted-foreground" />
                         Editar
                       </DropdownMenuItem>
-                      {employee.status === 'active' ? (
-                        <DropdownMenuItem 
-                          className="text-destructive focus:text-destructive" 
+                      {employee.isActive === true ? (
+                        <DropdownMenuItem
+                          className="text-destructive focus:text-destructive"
                           onClick={() => handleAction(employee, 'deactivate')}
                         >
                           <Trash2 className="mr-2 h-4 w-4" />
@@ -177,9 +186,8 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
         </Table>
       </div>
 
-      {/* Modal de Edição */}
       <Dialog open={dialogType === 'edit'} onOpenChange={() => dialogType === 'edit' && handleCloseDialog()}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-auto scrollbar-custom">
           <DialogHeader>
             <DialogTitle>Editar Funcionário</DialogTitle>
             <DialogDescription>

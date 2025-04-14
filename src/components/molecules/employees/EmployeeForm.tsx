@@ -17,9 +17,18 @@ import {
 const employeeSchema = z.object({
   name: z.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
   email: z.string().email('Email inválido'),
-  role: z.string().min(1, 'Selecione um cargo'),
+  cpf: z.string().min(11, 'CPF é obrigatório'),
+  rg: z.string().optional(),
+  cnh: z.string().optional(),
+  salary: z.coerce.number().positive('Salário deve ser maior que zero'),
+  phone: z.string().optional(),
+  hireDate: z.string().min(1, 'Data de contratação é obrigatória'),
+  observations: z.string().optional(),
+  cpfImageUrl: z.any().optional(),
+  rgImageUrl: z.any().optional(),
+  cnhImageUrl: z.any().optional(),
+  position: z.string().min(1, 'Selecione um cargo'),
   department: z.string().min(1, 'Selecione um departamento'),
-  startDate: z.string().min(1, 'Data de início é obrigatória'),
   endDate: z.string().optional(),
 })
 
@@ -41,7 +50,7 @@ const departments = [
   'Administração',
 ]
 
-const roles = [
+const position = [
   'Desenvolvedor',
   'Designer',
   'Gerente',
@@ -55,6 +64,8 @@ export function EmployeeForm({ initialData, onSubmit, onCancel }: EmployeeFormPr
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<EmployeeFormData>({
     resolver: zodResolver(employeeSchema),
@@ -90,27 +101,27 @@ export function EmployeeForm({ initialData, onSubmit, onCancel }: EmployeeFormPr
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="role">Cargo</Label>
-          <Select onValueChange={(value) => register('role').onChange({ target: { value } })}>
+          <Label htmlFor="position">Cargo</Label>
+          <Select value={watch('position')} onValueChange={(value) => setValue('position', value)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione um cargo" />
             </SelectTrigger>
             <SelectContent>
-              {roles.map((role) => (
-                <SelectItem key={role} value={role}>
-                  {role}
+              {position.map((position) => (
+                <SelectItem key={position} value={position}>
+                  {position}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {errors.role && (
-            <p className="text-sm text-destructive">{errors.role.message}</p>
+          {errors.position && (
+            <p className="text-sm text-destructive">{errors.position.message}</p>
           )}
         </div>
 
         <div className="grid gap-2">
           <Label htmlFor="department">Departamento</Label>
-          <Select onValueChange={(value) => register('department').onChange({ target: { value } })}>
+          <Select value={watch('department')} onValueChange={(value) => setValue('department', value)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione um departamento" />
             </SelectTrigger>
@@ -128,15 +139,42 @@ export function EmployeeForm({ initialData, onSubmit, onCancel }: EmployeeFormPr
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="startDate">Data de início</Label>
-          <Input
-            id="startDate"
-            type="date"
-            {...register('startDate')}
-          />
-          {errors.startDate && (
-            <p className="text-sm text-destructive">{errors.startDate.message}</p>
-          )}
+          <Label htmlFor="cpf">CPF</Label>
+          <Input id="cpf" placeholder="000.000.000-00" {...register('cpf')} />
+          {errors.cpf && <p className="text-sm text-destructive">{errors.cpf.message}</p>}
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="rg">RG</Label>
+          <Input id="rg" placeholder="00.000.000-0" {...register('rg')} />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="cnh">CNH</Label>
+          <Input id="cnh" placeholder="00000000000" {...register('cnh')} />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="salary">Salário</Label>
+          <Input id="salary" type="number" step="0.01" placeholder="R$ 0,00" {...register('salary')} />
+          {errors.salary && <p className="text-sm text-destructive">{errors.salary.message}</p>}
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="phone">Telefone</Label>
+          <Input id="phone" placeholder='(00) 00000-0000' {...register('phone')} />
+          {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="hireDate">Data de contratação</Label>
+          <Input id="hireDate" type="date" {...register('hireDate')} />
+          {errors.hireDate && <p className="text-sm text-destructive">{errors.hireDate.message}</p>}
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="observations">Observações</Label>
+          <Input id="observations" placeholder="Informações adicionais" {...register('observations')} />
         </div>
 
         {initialData?.endDate !== undefined && (
