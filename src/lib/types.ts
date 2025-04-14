@@ -13,8 +13,11 @@ export interface Employee {
   email: string;
   phone: string;
   position: string;
+  hireDate: string;
+  rg: string;
+  salary: number;
   department: string;
-  status: 'active' | 'inactive';
+  isActive: boolean
   createdAt: string;
   updatedAt: string;
 }

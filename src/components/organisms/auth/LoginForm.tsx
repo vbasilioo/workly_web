@@ -50,11 +50,11 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md bg-white/30 backdrop-blur-md border border-white/20 shadow-lg">
       <CardHeader className="space-y-4">
         <Logo className="mx-auto" />
         <CardTitle className="text-2xl text-center">Bem-vindo ao Workly!</CardTitle>
-        <CardDescription className="text-center">
+        <CardDescription className="text-center text-black">
           Entre com suas credenciais para acessar sua conta.
         </CardDescription>
       </CardHeader>
