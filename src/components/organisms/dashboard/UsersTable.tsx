@@ -24,6 +24,10 @@ import { CreateUserRequest, UpdateUserRequest, User } from '@/lib/types';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { format } from 'date-fns';
 
+interface UserTableProps {
+  users: User[];
+}
+
 export function UsersTable() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -41,6 +45,8 @@ export function UsersTable() {
     isDeletingUser,
   } = useUsers();
 
+  console.log(users);
+
   const handleCreateUser = async (data: CreateUserRequest) => {
     await createUser(data);
     setIsCreateDialogOpen(false);
@@ -48,7 +54,7 @@ export function UsersTable() {
 
   const handleUpdateUser = async (data: UpdateUserRequest) => {
     if (!selectedUser) return;
-    await updateUser({ id: selectedUser.id, data });
+    await updateUser({ id: selectedUser.id, data: data });
     setIsUpdateDialogOpen(false);
     setSelectedUser(null);
   };
@@ -60,11 +66,7 @@ export function UsersTable() {
     setSelectedUser(null);
   };
 
-  if (isLoadingUsers) {
-    return <div>Loading...</div>;
-  }
-
-  if (!users?.length) {
+  if (users?.length === 0) {
     return (
       <div className="space-y-4">
         <Button onClick={() => setIsCreateDialogOpen(true)}>
@@ -97,13 +99,15 @@ export function UsersTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
+            {users?.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell className="capitalize">{user.role}</TableCell>
                 <TableCell>
-                  {format(new Date(user.createdAt), 'MM/dd/yyyy')}
+                  {user.createdAt
+                    ? format(new Date(user.createdAt), 'MM/dd/yyyy')
+                    : 'N/A'}
                 </TableCell>
                 <TableCell className="flex items-center gap-2">
                   <Button
@@ -136,15 +140,15 @@ export function UsersTable() {
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create User</DialogTitle>
+            <DialogTitle>Cadastro de Usuário</DialogTitle>
             <DialogDescription>
-              Add a new user to the system. Only administrators can do this.
+              Adicione um novo usuário ao sistema. Preencha os campos abaixo e clique em cadastrar.
             </DialogDescription>
           </DialogHeader>
-          {/* <UserForm
-            onSubmit={handleCreateUser}
+          <UserForm
+            onSubmit={(data) => handleCreateUser(data as CreateUserRequest)}
             isLoading={isCreatingUser}
-          /> */}
+          />
         </DialogContent>
       </Dialog>
 
@@ -156,21 +160,20 @@ export function UsersTable() {
               Update the user's information.
             </DialogDescription>
           </DialogHeader>
-          {/* <UserForm
+          <UserForm
             user={selectedUser}
             onSubmit={handleUpdateUser}
             isLoading={isUpdatingUser}
-          /> */}
+          />
         </DialogContent>
       </Dialog>
 
       <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete User</DialogTitle>
+            <DialogTitle>Deletar Usuário</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this user? This action cannot be
-              undone.
+              Você tem certeza que deseja deletar este usuário? Esta ação não pode ser desfeita.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end gap-4">

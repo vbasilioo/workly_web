@@ -134,7 +134,7 @@ export function UserForm({ user, onSubmit, isLoading }: UserFormProps) {
 
         <div className="flex justify-end">
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : user ? 'Update' : 'Create'}
+            {isLoading ? 'Salvando...' : user ? 'Atualizar' : 'Cadastrar'}
           </Button>
         </div>
       </form>
