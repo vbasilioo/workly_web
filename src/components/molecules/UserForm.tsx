@@ -24,9 +24,9 @@ import { Button } from '@/components/ui/button';
 import { CreateUserRequest, UpdateUserRequest, User } from '@/lib/types';
 
 const createUserSchema = z.object({
-  name: z.string().min(3, 'Name must be at least 3 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  name: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
+  email: z.string().email('Endereço de email inválido'),
+  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
   role: z.enum(['administrator', 'user']),
 });
 
@@ -65,9 +65,9 @@ export function UserForm({ user, onSubmit, isLoading }: UserFormProps) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Nome</FormLabel>
               <FormControl>
-                <Input placeholder="John Doe" {...field} />
+                <Input placeholder="João da Silva" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,7 +81,7 @@ export function UserForm({ user, onSubmit, isLoading }: UserFormProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="john@example.com" {...field} />
+                <Input placeholder="joao@exemplo.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -94,7 +94,7 @@ export function UserForm({ user, onSubmit, isLoading }: UserFormProps) {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Senha</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
@@ -113,19 +113,19 @@ export function UserForm({ user, onSubmit, isLoading }: UserFormProps) {
           name="role"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Role</FormLabel>
+              <FormLabel>Perfil</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a role" />
+                    <SelectValue placeholder="Selecione um perfil" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="user">User</SelectItem>
-                  <SelectItem value="administrator">Administrator</SelectItem>
+                  <SelectItem value="user">Usuário</SelectItem>
+                  <SelectItem value="administrator">Administrador</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -134,7 +134,11 @@ export function UserForm({ user, onSubmit, isLoading }: UserFormProps) {
         />
 
         <div className="flex justify-end">
-          <Button type="submit" disabled={isLoading}>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+            className="bg-sky-400 hover:bg-sky-500 text-white"
+          >
             {isLoading ? 'Salvando...' : user ? 'Atualizar' : 'Cadastrar'}
           </Button>
         </div>

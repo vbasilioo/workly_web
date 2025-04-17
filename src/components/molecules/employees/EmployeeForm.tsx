@@ -38,6 +38,7 @@ interface EmployeeFormProps {
   initialData?: Partial<EmployeeFormData>
   onSubmit: (data: EmployeeFormData) => void
   onCancel: () => void
+  isSubmitting?: boolean
 }
 
 const departments = [
@@ -60,17 +61,19 @@ const position = [
   'Assistente',
 ]
 
-export function EmployeeForm({ initialData, onSubmit, onCancel }: EmployeeFormProps) {
+export function EmployeeForm({ initialData, onSubmit, onCancel, isSubmitting: externalIsSubmitting }: EmployeeFormProps) {
   const {
     register,
     handleSubmit,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting: formIsSubmitting },
   } = useForm<EmployeeFormData>({
     resolver: zodResolver(employeeSchema),
     defaultValues: initialData,
   })
+
+  const isSubmitting = externalIsSubmitting !== undefined ? externalIsSubmitting : formIsSubmitting
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -196,7 +199,11 @@ export function EmployeeForm({ initialData, onSubmit, onCancel }: EmployeeFormPr
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={isSubmitting}>
+        <Button 
+          type="submit" 
+          disabled={isSubmitting}
+          className="bg-sky-400 hover:bg-sky-500 text-white"
+        >
           {isSubmitting ? 'Salvando...' : initialData ? 'Atualizar' : 'Cadastrar'}
         </Button>
       </div>

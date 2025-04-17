@@ -15,10 +15,10 @@ export function useEmployees() {
     mutationFn: (data: CreateEmployeeRequest) => employeesService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
-      toast.success('Employee created successfully');
+      toast.success('Funcionário criado com sucesso');
     },
     onError: () => {
-      toast.error('Error creating employee');
+      toast.error('Erro ao criar funcionário');
     },
   });
 
@@ -27,10 +27,10 @@ export function useEmployees() {
       employeesService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
-      toast.success('Employee updated successfully');
+      toast.success('Funcionário atualizado com sucesso');
     },
     onError: () => {
-      toast.error('Error updating employee');
+      toast.error('Erro ao atualizar funcionário');
     },
   });
 
@@ -38,10 +38,10 @@ export function useEmployees() {
     mutationFn: (id: string) => employeesService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
-      toast.success('Employee deleted successfully');
+      toast.success('Funcionário deletado com sucesso');
     },
     onError: () => {
-      toast.error('Error deleting employee');
+      toast.error('Erro ao deletar funcionário');
     },
   });
 
@@ -49,10 +49,10 @@ export function useEmployees() {
     mutationFn: (id: string) => employeesService.restore(id),
     onSuccess: () => {
       refetch();
-      toast.success('Employee restored successfully');
+      toast.success('Funcionário restaurado com sucesso');
     },
     onError: () => {
-      toast.error('Error restoring employee');
+      toast.error('Erro ao restaurar funcionário');
     },
   })
 
