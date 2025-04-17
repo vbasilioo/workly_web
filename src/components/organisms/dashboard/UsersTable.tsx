@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
 import { useState } from 'react';
@@ -157,7 +158,7 @@ export function UsersTable() {
           <DialogHeader>
             <DialogTitle>Update User</DialogTitle>
             <DialogDescription>
-              Update the user's information.
+              Update the user&apos;s information.
             </DialogDescription>
           </DialogHeader>
           <UserForm

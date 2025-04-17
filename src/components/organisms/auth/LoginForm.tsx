@@ -6,7 +6,6 @@ import { LoginFormData, loginSchema } from '@/features/auth/schemas'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Logo } from '@/components/atoms/brand/Logo'
 import { signIn } from "next-auth/react";
 import { toast } from 'sonner'
@@ -18,85 +17,106 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
 
   const onSubmit = async (data: LoginFormData) => {
-    const result = await toast.promise(
-      async () => {
-        const response = await signIn("credentials", {
-          email: data.email,
-          password: data.password,
-          redirect: false
-        });
+    try {
+      const response = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false
+      });
 
-        if (!response?.ok) {
-          throw new Error("Login failed");
-        }
-
-        return response;
-      },
-      {
-        loading: "Entrando...",
-        success: () => {
-          router.push("/dashboard")
-          return "Login realizado com sucesso!";
-        },
-        error: "Credenciais inválidas. Verifique seu e-mail e senha.",
+      if (!response?.ok) {
+        toast.error("Credenciais inválidas. Verifique seu e-mail e senha.");
+        throw new Error("Login failed");
       }
-    );
+
+      toast.success("Login realizado com sucesso!");
+      router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <Card className="w-full max-w-md bg-white/30 backdrop-blur-md border border-white/20 shadow-lg">
-      <CardHeader className="space-y-4">
-        <Logo className="mx-auto" />
-        <CardTitle className="text-2xl text-center">Bem-vindo ao Workly!</CardTitle>
-        <CardDescription className="text-center text-black">
-          Entre com suas credenciais para acessar sua conta.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              {...register('email')}
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
-            )}
+    <div className="w-full min-h-screen flex flex-col lg:flex-row">
+      <div className="hidden lg:block lg:w-1/2 bg-gradient-to-br from-blue-600 to-cyan-400 relative">
+        <div className="absolute inset-0 flex items-center justify-center p-12">
+          <div className="max-w-lg">
+            <h1 className="text-4xl font-bold text-white mb-4">Transforme a gestão da sua equipe com o Workly</h1>
+            <p className="text-white/90 text-lg">
+              Uma plataforma completa para gerenciar seus colaboradores 
+              e aumentar a produtividade do seu negócio.
+            </p>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Senha</Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              {...register('password')}
-            />
-            {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
-            )}
+        </div>
+      </div>
+
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-white">
+        <div className="w-full max-w-md">
+          <div className="mb-8 text-center">
+            <Logo className="mx-auto mb-6 h-12" />
+            <h2 className="text-2xl font-bold text-gray-900">Bem-vindo ao Workly!</h2>
+            <p className="text-gray-600 mt-2">
+              Entre com suas credenciais para acessar sua conta.
+            </p>
           </div>
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? 'Entrando...' : 'Entrar'}
-          </Button>
-        </form>
-      </CardContent>
-      <CardFooter className="flex flex-col space-y-2">
-        <Button variant="link" className="text-sm">
-          Esqueceu sua senha?
-        </Button>
-        <Button variant="link" className="text-sm">
-          Não tem uma conta? Cadastre-se
-        </Button>
-      </CardFooter>
-    </Card>
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-gray-700">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="seu@email.com"
+                className="h-11"
+                {...register('email')}
+              />
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email.message}</p>
+              )}
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <Label htmlFor="password" className="text-gray-700">Senha</Label>
+                <Button variant="link" className="text-sm p-0 h-auto font-normal text-blue-600" type="button">
+                  Esqueceu sua senha?
+                </Button>
+              </div>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                className="h-11"
+                {...register('password')}
+              />
+              {errors.password && (
+                <p className="text-sm text-red-500">{errors.password.message}</p>
+              )}
+            </div>
+
+            <Button 
+              type="submit" 
+              className="w-full h-11" 
+              loadingText="Entrando..."
+            >
+              Entrar
+            </Button>
+            
+            <p className="text-center text-gray-600 text-sm mt-6">
+              Não tem uma conta?{' '}
+              <Button variant="link" className="p-0 h-auto font-normal text-blue-600 text-sm" type="button">
+                Cadastre-se agora
+              </Button>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
   )
-} 
+}

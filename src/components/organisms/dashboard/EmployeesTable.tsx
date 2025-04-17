@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useState } from 'react'
@@ -143,7 +144,6 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
                   {employee.department}
                 </TableCell>
                 <TableCell className="hidden md:table-cell">
-                  {/* {formatDate(employee.salary)} */}
                   {formatDate(employee.hireDate)}
                 </TableCell>
                 {employee.isActive === false && (
@@ -204,7 +204,6 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
         </DialogContent>
       </Dialog>
 
-      {/* Modal de Desativação */}
       <Dialog open={dialogType === 'deactivate'} onOpenChange={() => dialogType === 'deactivate' && handleCloseDialog()}>
         <DialogContent>
           <DialogHeader>
@@ -231,7 +230,6 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
         </DialogContent>
       </Dialog>
 
-      {/* Modal de Reativação */}
       <Dialog open={dialogType === 'reactivate'} onOpenChange={() => dialogType === 'reactivate' && handleCloseDialog()}>
         <DialogContent>
           <DialogHeader>

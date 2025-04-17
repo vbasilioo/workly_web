@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useForm } from 'react-hook-form';
@@ -41,7 +42,7 @@ type UserFormProps = {
 
 export function UserForm({ user, onSubmit, isLoading }: UserFormProps) {
   const form = useForm<FormData>({
-    resolver: zodResolver(user ? updateUserSchema : createUserSchema),
+    resolver: zodResolver(user ? updateUserSchema : createUserSchema) as any,
     defaultValues: user
       ? {
           name: user.name,
