@@ -1,10 +1,20 @@
 'use client'
 
 import { Sidebar } from '@/components/organisms/dashboard/Sidebar'
+import { Navbar } from '@/components/organisms/dashboard/Navbar'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SessionProvider } from 'next-auth/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, createContext, useContext } from 'react'
 import { cn } from '@/lib/utils'
+
+// Criando um contexto para compartilhar o estado da sidebar
+export const SidebarContext = createContext<{
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+}>({
+  collapsed: false,
+  setCollapsed: () => {},
+});
 
 export default function DashboardLayout({
   children,
@@ -14,40 +24,49 @@ export default function DashboardLayout({
   const [queryClient] = useState(() => new QueryClient())
   const [collapsed, setCollapsed] = useState(false)
   
+  // Inicializa o estado da sidebar a partir do localStorage
   useEffect(() => {
-    const savedState = localStorage.getItem('sidebarCollapsed')
-    if (savedState !== null) {
-      setCollapsed(savedState === 'true')
+    // Verifica se está no client-side
+    if (typeof window !== 'undefined') {
+      const savedState = localStorage.getItem('sidebarCollapsed')
+      if (savedState !== null) {
+        setCollapsed(savedState === 'true')
+      }
     }
   }, [])
 
+  // Atualiza o localStorage quando o estado muda
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'sidebarCollapsed') {
-        setCollapsed(e.newValue === 'true')
-      }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebarCollapsed', String(collapsed))
     }
-    
-    window.addEventListener('storage', handleStorageChange)
-    return () => {
-      window.removeEventListener('storage', handleStorageChange)
-    }
-  }, [])
+  }, [collapsed])
 
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <div className="min-h-screen bg-gray-50 flex">
-          <Sidebar />
-          <div 
-            className={cn(
-              "flex-1 transition-all duration-300",
-              collapsed ? "lg:ml-20" : "lg:ml-80"
-            )}
-          >
-            {children}
+        <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
+          <div className="min-h-screen bg-gray-50 flex">
+            <Sidebar />
+            <div 
+              className={cn(
+                "flex-1 flex flex-col transition-all duration-300",
+                collapsed ? "lg:ml-20" : "lg:ml-80"
+              )}
+              style={{ 
+                // Adicionando estilos inline para garantir que a transição funcione corretamente
+                transitionProperty: 'margin',
+                transitionDuration: '300ms',
+                transitionTimingFunction: 'ease-in-out'
+              }}
+            >
+              <Navbar userName="José Silva" />
+              <div className="flex-1">
+                {children}
+              </div>
+            </div>
           </div>
-        </div>
+        </SidebarContext.Provider>
       </SessionProvider>
     </QueryClientProvider>
   )

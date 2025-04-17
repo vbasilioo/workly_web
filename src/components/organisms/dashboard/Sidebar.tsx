@@ -1,15 +1,15 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Logo } from '@/components/atoms/brand/Logo'
-import { Menu, LayoutDashboard, Users, LogOut, ChevronLeft, ChevronRight, User } from 'lucide-react'
-import { signOut } from 'next-auth/react'
+import { Menu, LayoutDashboard, Users, User, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { SidebarContext } from '@/app/(dashboard)/layout'
 
 const menuItems = [
   {
@@ -24,54 +24,21 @@ const menuItems = [
     icon: Users,
     description: 'Gerenciar funcionários'
   },
-  /*{
-    title: 'Calendário',
-    href: '/calendar',
-    icon: Calendar,
-    description: 'Agendar compromissos'
-  },*/
   {
     title: 'Usuários',
     href: '/users',
     icon: User,
     adminOnly: true,
     description: 'Gerenciar acesso ao sistema'
-  },
-  /*{
-    title: 'Configurações',
-    href: '/settings',
-    icon: Settings,
-    description: 'Ajustar preferências'
-  },
-  {
-    title: 'Notificações',
-    href: '/notifications',
-    icon: Bell,
-    description: 'Visualizar notificações'
-  }*/
+  }
 ]
 
 export function Sidebar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
-  const [collapsed, setCollapsed] = useState(false)
-  
-  useEffect(() => {
-    const savedState = localStorage.getItem('sidebarCollapsed')
-    if (savedState !== null) {
-      setCollapsed(savedState === 'true')
-    }
-  }, [])
-
-  useEffect(() => {
-    localStorage.setItem('sidebarCollapsed', String(collapsed))
-  }, [collapsed])
+  const { collapsed, setCollapsed } = useContext(SidebarContext)
 
   const isActive = (path: string) => pathname === path
-
-  async function handleSignOut() {
-    await signOut({ callbackUrl: '/' });
-  }
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed)
@@ -87,7 +54,7 @@ export function Sidebar() {
         </SheetTrigger>
         <SheetContent side="left" className="w-80 p-0 border-r-0 bg-gradient-to-b from-blue-50 to-white">
           <div className="flex h-full flex-col">
-            <div className="p-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white">
+            <div className="p-4 bg-gradient-to-r from-blue-700 to-blue-600 text-white">
               <Logo className="justify-start" />
             </div>
             <nav className="flex-1 overflow-y-auto p-3 space-y-1.5">
@@ -125,23 +92,10 @@ export function Sidebar() {
                 </Link>
               ))}
             </nav>
-            <Separator className="bg-blue-100" />
-            <div className="p-3">
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start gap-3 text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200" 
-                onClick={handleSignOut}
-              >
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-100">
-                  <LogOut className="h-5 w-5" />
-                </div>
-                <span>Sair do sistema</span>
-              </Button>
-            </div>
           </div>
         </SheetContent>
       </Sheet>
-
+      
       <div 
         className={cn(
           "hidden lg:fixed lg:inset-y-0 lg:z-30 lg:flex lg:flex-col transition-all duration-300 ease-in-out bg-gradient-to-b from-blue-50 to-white border-r border-blue-100",
@@ -149,7 +103,7 @@ export function Sidebar() {
         )}
       >
         <div className="flex h-full flex-col">
-          <div className="p-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white flex items-center justify-between">
+          <div className="p-4 bg-gradient-to-r from-blue-700 to-blue-600 text-white flex items-center justify-between">
             {!collapsed && <Logo className="justify-start" />}
             {collapsed && <div className="w-full flex justify-center">
               <Logo.Icon className="h-8 w-8" />
@@ -205,28 +159,6 @@ export function Sidebar() {
               </Link>
             ))}
           </nav>
-          
-          <Separator className="bg-blue-100" />
-          
-          <div className="p-3">
-            <Button 
-              variant="ghost" 
-              className={cn(
-                "text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200",
-                collapsed ? "justify-center p-2 w-full" : "w-full justify-start gap-3"
-              )}
-              onClick={handleSignOut}
-              title={collapsed ? "Sair do sistema" : undefined}
-            >
-              <div className={cn(
-                "flex shrink-0 items-center justify-center rounded-lg bg-red-100",
-                collapsed ? "h-10 w-10" : "h-9 w-9"
-              )}>
-                <LogOut className="h-5 w-5" />
-              </div>
-              {!collapsed && <span>Sair do sistema</span>}
-            </Button>
-          </div>
         </div>
       </div>
     </>

@@ -45,18 +45,10 @@ export default function DashboardPage() {
     : [];
 
   return (
-    <div className="w-full min-h-screen bg-gray-50">
-      <div className="w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-6 py-8">
-        <div className="w-full">
-          <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-          <p className="text-blue-100 mt-1">
-            Visão geral dos seus funcionários e custos
-          </p>
-        </div>
-      </div>
-
+    <div className="w-full min-h-screen bg-gray-50 pt-6">
       <div className="w-full px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 -mt-8">
+
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map((stat) => {
             const bgColor = {
               blue: 'bg-blue-50 border-blue-200',
@@ -111,7 +103,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="h-64 sm:h-80 w-full bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Gráfico de atividades</p>
+                <p className="text-gray-500">Gráfico de atividades aqui</p>
               </div>
             </CardContent>
           </Card>
@@ -126,7 +118,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="h-64 sm:h-80 w-full bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Gráfico de distribuição</p>
+                <p className="text-gray-500">Gráfico de distribuição aqui</p>
               </div>
             </CardContent>
           </Card>
@@ -143,7 +135,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="h-64 w-full bg-gray-100 rounded-lg flex items-center justify-center">
-                <p className="text-gray-500">Tabela de destaques</p>
+                <p className="text-gray-500">Tabela de destaques aqui</p>
               </div>
             </CardContent>
           </Card>
