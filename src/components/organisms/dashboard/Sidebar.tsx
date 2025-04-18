@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Logo } from '@/components/atoms/brand/Logo'
-import { Menu, LayoutDashboard, Users, User, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Menu, LayoutDashboard, Users, User, ChevronLeft, ChevronRight, MapPin, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { SidebarContext } from '@/app/(dashboard)/layout'
 
@@ -25,11 +25,24 @@ const menuItems = [
     description: 'Gerenciar funcionários'
   },
   {
+    title: 'Endereços',
+    href: '/addresses',
+    icon: MapPin,
+    description: 'Gerenciar endereços'
+  },
+  {
     title: 'Usuários',
     href: '/users',
     icon: User,
     adminOnly: true,
     description: 'Gerenciar acesso ao sistema'
+  },
+  {
+    title: 'Configurações',
+    href: '/settings',
+    icon: Settings,
+    adminOnly: true,
+    description: 'Ajustes do sistema'
   }
 ]
 

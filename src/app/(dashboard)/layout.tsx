@@ -7,7 +7,6 @@ import { SessionProvider } from 'next-auth/react'
 import { useState, useEffect, createContext, useContext } from 'react'
 import { cn } from '@/lib/utils'
 
-// Criando um contexto para compartilhar o estado da sidebar
 export const SidebarContext = createContext<{
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
@@ -24,9 +23,7 @@ export default function DashboardLayout({
   const [queryClient] = useState(() => new QueryClient())
   const [collapsed, setCollapsed] = useState(false)
   
-  // Inicializa o estado da sidebar a partir do localStorage
   useEffect(() => {
-    // Verifica se está no client-side
     if (typeof window !== 'undefined') {
       const savedState = localStorage.getItem('sidebarCollapsed')
       if (savedState !== null) {
@@ -35,7 +32,6 @@ export default function DashboardLayout({
     }
   }, [])
 
-  // Atualiza o localStorage quando o estado muda
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('sidebarCollapsed', String(collapsed))
@@ -54,7 +50,6 @@ export default function DashboardLayout({
                 collapsed ? "lg:ml-20" : "lg:ml-80"
               )}
               style={{ 
-                // Adicionando estilos inline para garantir que a transição funcione corretamente
                 transitionProperty: 'margin',
                 transitionDuration: '300ms',
                 transitionTimingFunction: 'ease-in-out'

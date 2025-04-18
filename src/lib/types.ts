@@ -22,6 +22,33 @@ export interface Employee {
   updatedAt: string;
 }
 
+export interface Address {
+  id: string;
+  street: string;
+  number: string;
+  complement: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  type: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Settings {
+  id: string;
+  key: string;
+  value: any;
+  group: string;
+  description: string;
+  isPublic: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface LoginResponse {
   data: {
     access_token: string;
