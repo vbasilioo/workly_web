@@ -9,7 +9,7 @@ declare module "next-auth" {
       id: string;
       email: string;
       name: string;
-      role: "administrator" | "user";
+      role: "administrator" | "management" | "employee";
     };
   }
 
@@ -17,7 +17,7 @@ declare module "next-auth" {
     id: string;
     email: string;
     name: string;
-    role: "administrator" | "user";
+    role: "administrator" | "management" | "employee";
     token: string;
   }
 }
@@ -28,6 +28,6 @@ declare module "next-auth/jwt" {
     id: string;
     email: string;
     name: string;
-    role: "administrator" | "user";
+    role: "administrator" | "management" | "employee";
   }
 }

@@ -4,7 +4,7 @@ import { Sidebar } from '@/components/organisms/dashboard/Sidebar'
 import { Navbar } from '@/components/organisms/dashboard/Navbar'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SessionProvider } from 'next-auth/react'
-import { useState, useEffect, createContext, useContext } from 'react'
+import { useState, useEffect, createContext } from 'react'
 import { cn } from '@/lib/utils'
 
 export const SidebarContext = createContext<{
@@ -12,7 +12,7 @@ export const SidebarContext = createContext<{
   setCollapsed: (collapsed: boolean) => void;
 }>({
   collapsed: false,
-  setCollapsed: () => {},
+  setCollapsed: () => { },
 });
 
 export default function DashboardLayout({
@@ -22,7 +22,7 @@ export default function DashboardLayout({
 }) {
   const [queryClient] = useState(() => new QueryClient())
   const [collapsed, setCollapsed] = useState(false)
-  
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedState = localStorage.getItem('sidebarCollapsed')
@@ -44,18 +44,18 @@ export default function DashboardLayout({
         <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
           <div className="min-h-screen bg-gray-50 flex">
             <Sidebar />
-            <div 
+            <div
               className={cn(
                 "flex-1 flex flex-col transition-all duration-300",
                 collapsed ? "lg:ml-20" : "lg:ml-80"
               )}
-              style={{ 
+              style={{
                 transitionProperty: 'margin',
                 transitionDuration: '300ms',
                 transitionTimingFunction: 'ease-in-out'
               }}
             >
-              <Navbar userName="José Silva" />
+              <Navbar />
               <div className="flex-1">
                 {children}
               </div>

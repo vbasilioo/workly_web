@@ -76,8 +76,8 @@ export function EmployeeForm({ initialData, onSubmit, onCancel, isSubmitting: ex
   const isSubmitting = externalIsSubmitting !== undefined ? externalIsSubmitting : formIsSubmitting
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 space-y-2 space-x-2">
         <div className="grid gap-2">
           <Label htmlFor="name">Nome completo</Label>
           <Input
@@ -199,8 +199,8 @@ export function EmployeeForm({ initialData, onSubmit, onCancel, isSubmitting: ex
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancelar
         </Button>
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           disabled={isSubmitting}
           className="bg-sky-400 hover:bg-sky-500 text-white"
         >
