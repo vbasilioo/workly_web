@@ -3,17 +3,16 @@
 import { Sidebar } from '@/components/organisms/dashboard/Sidebar'
 import { Navbar } from '@/components/organisms/dashboard/Navbar'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { SessionProvider } from 'next-auth/react'
+import { SessionProvider, useSession } from 'next-auth/react'
 import { useState, useEffect, createContext, useContext } from 'react'
 import { cn } from '@/lib/utils'
 
-// Criando um contexto para compartilhar o estado da sidebar
 export const SidebarContext = createContext<{
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
 }>({
   collapsed: false,
-  setCollapsed: () => {},
+  setCollapsed: () => { },
 });
 
 export default function DashboardLayout({
@@ -23,10 +22,8 @@ export default function DashboardLayout({
 }) {
   const [queryClient] = useState(() => new QueryClient())
   const [collapsed, setCollapsed] = useState(false)
-  
-  // Inicializa o estado da sidebar a partir do localStorage
+
   useEffect(() => {
-    // Verifica se está no client-side
     if (typeof window !== 'undefined') {
       const savedState = localStorage.getItem('sidebarCollapsed')
       if (savedState !== null) {
@@ -35,7 +32,6 @@ export default function DashboardLayout({
     }
   }, [])
 
-  // Atualiza o localStorage quando o estado muda
   useEffect(() => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('sidebarCollapsed', String(collapsed))
@@ -48,19 +44,18 @@ export default function DashboardLayout({
         <SidebarContext.Provider value={{ collapsed, setCollapsed }}>
           <div className="min-h-screen bg-gray-50 flex">
             <Sidebar />
-            <div 
+            <div
               className={cn(
                 "flex-1 flex flex-col transition-all duration-300",
                 collapsed ? "lg:ml-20" : "lg:ml-80"
               )}
-              style={{ 
-                // Adicionando estilos inline para garantir que a transição funcione corretamente
+              style={{
                 transitionProperty: 'margin',
                 transitionDuration: '300ms',
                 transitionTimingFunction: 'ease-in-out'
               }}
             >
-              <Navbar userName="José Silva" />
+              <Navbar />
               <div className="flex-1">
                 {children}
               </div>

@@ -1,48 +1,50 @@
 'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuGroup, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { LogOut, Settings, User, Bell } from "lucide-react"
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 interface NavbarProps {
   className?: string
   title?: string
-  userName?: string
 }
 
-export function Navbar({ className, title, userName = "Usuário" }: NavbarProps) {
+export function Navbar({ className, title }: NavbarProps) {
   const pathname = usePathname()
+  const { data: session } = useSession()
 
   const getPageTitle = () => {
     if (title) return title
-    
+
     const pathSegments = pathname.split('/')
     const currentPath = pathSegments[pathSegments.length - 1]
-    
+
     const titles: Record<string, string> = {
       'dashboard': 'Dashboard',
       'employees': 'Funcionários',
       'users': 'Usuários do Sistema',
     }
-    
+
     return titles[currentPath] || 'Dashboard'
   }
-  
+
+  const name = session?.user?.name || 'Usuário'
+
   const getUserInitials = () => {
-    if (!userName) return "U"
-    return userName
+    if (!name) return "U"
+    return name
       .split(' ')
       .map(part => part.charAt(0))
       .join('')
@@ -62,22 +64,22 @@ export function Navbar({ className, title, userName = "Usuário" }: NavbarProps)
       <div className="flex-1 text-center">
         <h1 className="text-xl font-bold tracking-tight">{getPageTitle()}</h1>
       </div>
-      
+
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="text-white hover:bg-blue-700/20">
           <Bell className="h-5 w-5" />
         </Button>
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative flex items-center gap-2 rounded-full hover:bg-blue-700/20 px-2 py-1.5">
               <Avatar className="h-9 w-9 border-2 border-white/30">
-                <AvatarImage src="/avatar.png" alt={userName} />
+                <AvatarImage src="/avatar.png" alt={name} />
                 <AvatarFallback className="bg-blue-700 text-white">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
-              <span className="hidden sm:block font-medium">{userName}</span>
+              <span className="hidden sm:block font-medium">{name}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56" align="end">
@@ -103,4 +105,4 @@ export function Navbar({ className, title, userName = "Usuário" }: NavbarProps)
       </div>
     </div>
   )
-} 
+}
