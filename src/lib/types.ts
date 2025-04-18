@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'administrator' | 'user';
+  role: 'administrator' | 'management' | 'employee';
   createdAt: string;
   updatedAt: string;
 }
@@ -65,3 +65,43 @@ export interface UpdateEmployeeRequest {
   department?: string;
   status?: 'active' | 'inactive';
 } 
+
+export interface Address {
+  id: string;
+  street: string;
+  number?: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  reference?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateAddressRequest {
+  street: string;
+  number?: string;
+  complement?: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  reference?: string;
+}
+
+export interface CreateAddressWithEmployeeRequest extends CreateAddressRequest {
+  employeeId: string;
+}
+
+export interface UpdateAddressRequest {
+  street?: string;
+  number?: string;
+  complement?: string;
+  neighborhood?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  reference?: string;
+}
