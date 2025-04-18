@@ -3,8 +3,8 @@
 import { Sidebar } from '@/components/organisms/dashboard/Sidebar'
 import { Navbar } from '@/components/organisms/dashboard/Navbar'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { SessionProvider, useSession } from 'next-auth/react'
-import { useState, useEffect, createContext, useContext } from 'react'
+import { SessionProvider } from 'next-auth/react'
+import { useState, useEffect, createContext } from 'react'
 import { cn } from '@/lib/utils'
 
 export const SidebarContext = createContext<{

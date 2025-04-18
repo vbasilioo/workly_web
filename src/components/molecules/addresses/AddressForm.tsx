@@ -28,7 +28,6 @@ interface AddressFormProps {
 }
 
 export function AddressForm({
-    userId,
     onSubmit,
     onCancel,
     isSubmitting = false,
