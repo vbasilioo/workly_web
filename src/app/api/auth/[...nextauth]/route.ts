@@ -53,7 +53,7 @@ const handler = NextAuth({
                 id: token.id as string,
                 name: token.name as string,
                 email: token.email as string,
-                role: token.role as "administrator" | "user",
+                role: token.role as "administrator" | "management" | "employee",
             };
 
             return session;

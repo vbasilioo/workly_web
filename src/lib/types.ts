@@ -38,14 +38,14 @@ export interface CreateUserRequest {
   name: string;
   email: string;
   password: string;
-  role: 'administrator' | 'user';
+  role: 'administrator' | 'management' | 'employee';
 }
 
 export interface UpdateUserRequest {
   name?: string;
   email?: string;
   password?: string;
-  role?: 'administrator' | 'user';
+  role?: 'administrator' | 'management' | 'employee';
 }
 
 export interface CreateEmployeeRequest {
